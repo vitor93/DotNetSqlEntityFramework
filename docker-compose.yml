@@ -1,0 +1,34 @@
+services:
+  productapi:
+    image: ${DOCKER_REGISTRY-}productapi
+    build:
+      context: .
+      dockerfile: source/ProductApi/Dockerfile
+  mysql:
+    image: mysql:8.0
+    container_name: mysql_container
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: sample_password
+      MYSQL_DATABASE: mysqldbProducts
+      MYSQL_USER: YourUsername
+      MYSQL_PASSWORD: YourPassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: phpmyadmin_container_3
+    restart: always
+    ports:
+      - "8083:80"
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: sample_password
+    depends_on:
+      - mysql
+volumes:
+  mysql_data:
